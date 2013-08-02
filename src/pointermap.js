@@ -48,7 +48,7 @@
       var i = this.ids.indexOf(inId);
       return this.pointers[i];
     },
-    get size() {
+    size: function() {
       return this.pointers.length;
     },
     clear: function() {
