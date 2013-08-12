@@ -57,13 +57,14 @@
         }
         var e = this.prepareEvent(inEvent);
         pointermap.set(this.POINTER_ID, inEvent);
-        dispatcher.down(e);
+
+        this.processEventHook("pointerdown", e, "down");
       }
     },
     mousemove: function(inEvent) {
       if (!this.isEventSimulatedFromTouch(inEvent)) {
         var e = this.prepareEvent(inEvent);
-        dispatcher.move(e);
+        this.processEventHook("pointermove", e, "move");
       }
     },
     mouseup: function(inEvent) {
@@ -71,7 +72,7 @@
         var p = pointermap.get(this.POINTER_ID);
         if (p && p.button === inEvent.button) {
           var e = this.prepareEvent(inEvent);
-          dispatcher.up(e);
+          this.processEventHook("pointerup", e, "up");
           this.cleanupMouse();
         }
       }
@@ -79,22 +80,29 @@
     mouseover: function(inEvent) {
       if (!this.isEventSimulatedFromTouch(inEvent)) {
         var e = this.prepareEvent(inEvent);
-        dispatcher.enterOver(e);
+        this.processEventHook("pointerover", e, "enterOver");
       }
     },
     mouseout: function(inEvent) {
       if (!this.isEventSimulatedFromTouch(inEvent)) {
         var e = this.prepareEvent(inEvent);
-        dispatcher.leaveOut(e);
+        this.processEventHook("pointerout", e, "leaveOut");
       }
     },
     cancel: function(inEvent) {
       var e = this.prepareEvent(inEvent);
-      dispatcher.cancel(e);
+      this.processEventHook("pointercancel", e, "cancel");
       this.cleanupMouse();
     },
     cleanupMouse: function() {
-      pointermap.delete(this.POINTER_ID);
+      pointermap['delete'](this.POINTER_ID);
+    },
+    processEventHook: function(eventType, event, dispatchType) {
+      if (scope.IS_OLD_IE && scope.externalEventDispatcher) {
+        scope.externalEventDispatcher(eventType, event);
+      } else {
+        dispatcher[dispatchType](event);
+      }
     }
   };
 
