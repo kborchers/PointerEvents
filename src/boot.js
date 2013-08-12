@@ -83,5 +83,8 @@
   scope.targetFinding = target;
   scope.findTarget = target.findTarget.bind(target);
 
+  // Add flag for old IE
+  scope.IS_OLD_IE = !Object.create;
+
   window.PointerEventsPolyfill = scope;
 })(window.PointerEventsPolyfill);

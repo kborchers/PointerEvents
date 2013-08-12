@@ -5,6 +5,9 @@
  */
 
 (function(scope) {
+  if (scope.IS_OLD_IE) {
+    return;
+  }
   var dispatcher = scope.dispatcher;
   var pointermap = dispatcher.pointermap;
   var HAS_BITMAP_TYPE = window.MSPointerEvent && typeof window.MSPointerEvent.MSPOINTER_TYPE_MOUSE === 'number';
@@ -41,7 +44,7 @@
       return e;
     },
     cleanup: function(id) {
-      pointermap.delete(id);
+      pointermap['delete'](id);
     },
     MSPointerDown: function(inEvent) {
       pointermap.set(inEvent.pointerId, inEvent);

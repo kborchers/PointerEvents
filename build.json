@@ -1,4 +1,5 @@
 [
+  "src/oldIE.js",
   "src/boot.js",
   "src/touch-action.js",
   "src/PointerEvent.js",
