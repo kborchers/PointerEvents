@@ -22,19 +22,19 @@ suite('PointerMap', function() {
       expect(p.ids).to.have.length(1);
       expect(p.pointers).to.have.length(1);
     }
-    expect(p.size).to.equal(1);
+    expect(p.size()).to.equal(1);
   });
   test('PointerMap .get', function() {
     var p = new PointerMap;
   });
   test('PointerMap .size', function() {
     var p = new PointerMap;
-    expect(p.size).not.to.be.a('function');
-    expect(p.size).to.equal(0);
+    expect(p.size).to.be.a('function');
+    expect(p.size()).to.equal(0);
     p.set(1, true);
-    expect(p.size).to.equal(1);
+    expect(p.size()).to.equal(1);
     p.set(1, false);
-    expect(p.size).to.equal(1);
+    expect(p.size()).to.equal(1);
   });
   test('PointerMap .has', function() {
     var p = new PointerMap;
@@ -46,16 +46,16 @@ suite('PointerMap', function() {
     var p = new PointerMap;
     p.set(1, true);
     p.set(2, false);
-    expect(p.size).to.equal(2);
+    expect(p.size()).to.equal(2);
     p.delete(1);
-    expect(p.size).to.equal(1);
+    expect(p.size()).to.equal(1);
     expect(p.get(2)).to.equal(false);
   });
   test('PointerMap .clear', function() {
     var p = new PointerMap;
     p.set(1, true);
     p.clear();
-    expect(p.size).to.equal(0);
+    expect(p.size()).to.equal(0);
   });
   test('PointerMap .forEach', function() {
     var p = new PointerMap;
