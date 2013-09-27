@@ -66,7 +66,6 @@
     if (NEW_MOUSE_EVENT) {
       e = new MouseEvent(inType, inDict);
     } else {
-      e = document.createEvent('MouseEvent');
       // import values from the given dictionary
       var props = {
         bubbles: false,
@@ -91,20 +90,39 @@
         }
       });
 
-      // define the properties inherited from MouseEvent
-      e.initMouseEvent(
-        inType, props.bubbles, props.cancelable, props.view, props.detail,
-        props.screenX, props.screenY, props.clientX, props.clientY, props.ctrlKey,
-        props.altKey, props.shiftKey, props.metaKey, props.button, props.relatedTarget
-      );
+      if (document.createEvent) {
+        e = document.createEvent('MouseEvent');
+
+        // define the properties inherited from MouseEvent
+        e.initMouseEvent(
+          inType, props.bubbles, props.cancelable, props.view, props.detail,
+          props.screenX, props.screenY, props.clientX, props.clientY, props.ctrlKey,
+          props.altKey, props.shiftKey, props.metaKey, props.button, props.relatedTarget
+        );
+
+        // TODO this fails in IE8, it doesn't want/allow us to set enumerable:true
+        // define the buttons property according to DOM Level 3 spec
+        if (!HAS_BUTTONS) {
+          // IE 10 has buttons on MouseEvent.prototype as a getter w/o any setting
+          // mechanism
+          Object.defineProperty(e, 'buttons', {get: function(){ return buttons; }, enumerable: true});
+        }
+      } else if (document.createEventObject) {
+        e = document.createEventObject();
+        Object.keys(props).forEach(function(k) {
+          e[k] = props[k];
+        });
+        // standards event.button uses constants defined here: http://msdn.microsoft.com/en-us/library/ie/ff974877(v=vs.85).aspx
+        // old IE event.button uses constants defined here: http://msdn.microsoft.com/en-us/library/ie/ms533544(v=vs.85).aspx
+        // so we actually need to map the standard back to oldIE
+        e.button = {
+          0: 1,
+          1: 4,
+          2: 2
+        }[ e.button ] || e.button;
+      }
     }
 
-    // define the buttons property according to DOM Level 3 spec
-    if (!HAS_BUTTONS) {
-      // IE 10 has buttons on MouseEvent.prototype as a getter w/o any setting
-      // mechanism
-      Object.defineProperty(e, 'buttons', {get: function(){ return buttons; }, enumerable: true});
-    }
 
     // Spec requires that pointers without pressure specified use 0.5 for down
     // state and 0 for up state.
