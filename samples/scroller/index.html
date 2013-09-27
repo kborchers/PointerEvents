@@ -37,6 +37,8 @@
         width: 100px;
       }
     </style>
+    <!-- see comment in ../../pointervents.js -->
+    <script src="../../../tools/loader/loader.js"></script>
     <script src="../../pointerevents.js"></script>
   </head>
   <body>
@@ -52,11 +54,11 @@
       var size = 50;
       for (var i = 0; i < size; i++) {
         var holder = document.createElement('div');
-        holder.classList.add('holder');
+        holder.className = 'holder';
         for (var j = 0; j < size; j++) {
           var e = document.createElement('span');
           e.textContent = i + ',' + j;
-          e.classList.add('inner');
+          e.className = 'inner';
           holder.appendChild(e);
         }
         big.appendChild(holder);

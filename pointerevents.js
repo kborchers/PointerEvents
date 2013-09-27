@@ -7,6 +7,7 @@
   var thisFile = 'pointerevents.js';
   var scopeName = 'PointerEventsPolyfill';
   var modules = [
+    'src/oldIE.js',
     'src/boot.js',
     'src/touch-action.js',
     'src/PointerEvent.js',
@@ -26,8 +27,8 @@
     modules: modules
   };
 
-  var script = document.querySelector('script[src $= "' + thisFile + '"]');
-  var src = script.attributes.src.value;
+  var script = document.scripts[document.scripts.length - 1];
+  var src = script.getAttribute('src');
   var basePath = src.slice(0, src.indexOf(thisFile));
 
   if (!window.PolymerLoader) {
@@ -35,6 +36,7 @@
     document.write('<script src="' + path + '"></script>');
   }
 
+  // BROKEN: IE executes inline scripts before external scripts, so PolymerLoader is still undefined
   document.write('<script>PolymerLoader.load("' + scopeName + '")</script>');
 
 })();
