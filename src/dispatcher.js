@@ -167,6 +167,13 @@
       for (var n in inEvent) {
         eventCopy[n] = inEvent[n];
       }
+
+      // Support: IE<9
+      // Fix target property (#1925)
+      if ( !eventCopy.target ) {
+        eventCopy.target = inEvent.srcElement || document;
+      }
+
       return eventCopy;
     },
     getTarget: function(inEvent) {
