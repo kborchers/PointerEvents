@@ -218,7 +218,13 @@
     dispatchEvent: function(inEvent) {
       var t = this.getTarget(inEvent);
       if (t) {
-        return t.dispatchEvent(inEvent);
+        if (t.dispatchEvent) {
+          return t.dispatchEvent(inEvent);
+        } else if (t.fireEvent) {
+          // dispatchEvent doesn't work in IE8, fireEvent should do the trick
+          // TODO this throws "Invalid argument" in IE8, why?
+          return t.fireEvent('on' + inEvent.type, inEvent);
+        }
       }
     },
     asyncDispatchEvent: function(inEvent) {
